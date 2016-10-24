@@ -5,8 +5,11 @@ import com.app.aztask.TabsAdapter;
 import com.app.aztask.data.User;
 import com.app.aztask.net.CheckUserRegisterationWorker;
 import com.app.aztask.util.Util;
-import android.content.BroadcastReceiver;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 	
     String PROJECT_NUMBER = "155962838252";
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 90000;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
+//    private BroadcastReceiver mRegistrationBroadcastReceiver;
     
     public static final String REGISTRATION_SUCCESS = "RegistrationSuccess";
     public static final String REGISTRATION_ERROR = "RegistrationError";
@@ -39,7 +42,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        appContext = getApplicationContext();
+
  
+		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+		if ( !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+	        buildAlertMessageNoGps();
+	    }
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("NearBy Tasks"));
         tabLayout.addTab(tabLayout.newTab().setText("My Tasks"));
@@ -67,32 +79,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 		
-		appContext = getApplicationContext();
 		loggedInUser=isUserRegistered();
 		USER_ID=(loggedInUser!=null ) ? loggedInUser.getUserId() : 0;
 		
-		
-		
-//		super.onCreate(savedInstanceState);
-//		
-//		setContentView(R.layout.activity_main);
-//
-//		FragmentManager fm = getSupportFragmentManager();
-//		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-//
-//		if (fragment == null) {
-//			fragment = new TaskFragment(this);
-//			fm.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
-//
-//		}
-//        
-//		appContext = getApplicationContext();
-//		loggedInUser=isUserRegistered();
-//		USER_ID=(loggedInUser!=null ) ? loggedInUser.getUserId() : 0;
-
-
 	}
-	 
+	
+
+	
 //    @Override
 //    protected void onResume() {
 //        super.onResume();
@@ -113,6 +106,15 @@ public class MainActivity extends AppCompatActivity {
 //    }
     
 
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+//		    FragmentManager fm = getFragmentManager();
+//		    FragmentTransaction ft = fm.beginTransaction();
+//		    NearByTasksTab llf = new NearByTasksTab(this);
+//		    ft.replace(R.id.nearbytasks,llf);
+//		    ft.commit();
+	}
 	
 	private User isUserRegistered() {
 		String deviceId=Util.getDeviceId();
@@ -158,5 +160,26 @@ public class MainActivity extends AppCompatActivity {
 	 
 	        return super.onOptionsItemSelected(item);
 	    }
+	    
+		  public void buildAlertMessageNoGps() {
+			    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			    builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+			           .setCancelable(false)
+			           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			               public void onClick(final DialogInterface dialog,final int id) {
+			            	   Intent intent=new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			            	   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			                   appContext.startActivity(intent);
+			               }
+			           })
+			           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			               public void onClick(final DialogInterface dialog,final int id) {
+			                    dialog.cancel();
+			               }
+			           });
+			    final AlertDialog alert = builder.create();
+			    alert.show();
+			}
+
 
 }

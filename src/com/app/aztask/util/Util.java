@@ -42,7 +42,10 @@ public class Util {
 	}
 	
 	public static Location getDeviceLocation() {
+		
+
 		LocationManager lm = (LocationManager) MainActivity.getAppContext().getSystemService(Context.LOCATION_SERVICE);
+
 		DeviceLocation locationListener = new DeviceLocation();
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 		Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -54,5 +57,8 @@ public class Util {
 		}
 		return location;
 	}
+	
+
+
 
 }

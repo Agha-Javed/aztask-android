@@ -87,7 +87,6 @@ public class GCMRegistrationIntentService extends IntentService {
 				while ((line = br.readLine()) != null) {
 					sb.append(line + "\n");
 				}
-				
 				Log.i(CLASS_NAME, "GCM Token Registration Response:"+sb.toString());
 				br.close();
 			} else {
@@ -98,7 +97,5 @@ public class GCMRegistrationIntentService extends IntentService {
 		}
 
 	}
-
-    
     
 }

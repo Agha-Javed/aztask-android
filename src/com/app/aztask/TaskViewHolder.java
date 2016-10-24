@@ -24,6 +24,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder{
 		coverImageView = (ImageView) v.findViewById(R.id.coverImageView);
 		likeImageView = (ImageView) v.findViewById(R.id.likeImageView);
 		shareImageView = (ImageView) v.findViewById(R.id.shareImageView);
+		
 		likeImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
